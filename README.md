@@ -55,16 +55,28 @@ Additionally, the app allows for real-time updates and scoring of games, keeping
 3. Set up Firebase:
 
    - Create a Firebase project and enable Firestore.
-   - Add your Firebase credentials in a `.env` file:
+   - Add your Firebase credentials in a `.env` file in the root directory:
      ```bash
      FIREBASE_API_KEY=your_firebase_api_key
      FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
      FIREBASE_PROJECT_ID=your_project_id
      ```
+   - Ensure that the firebase dependency is installed by running:
+     ```bash
+     firebase --version
+     ```
+      - If not, run:
+	     ```bash
+	     npm install -g firebase-tools
+	     ```
+   - Finally, log into the firebase CLI with:
+     ```bash
+     firebase login
+     ```
 
 4. Start the backend server:
 
-   - Then, start the backend server:
+   - Then, start the backend server from the `database/functions` directory:
      ```bash
      npm run start
      ```
@@ -83,7 +95,7 @@ Additionally, the app allows for real-time updates and scoring of games, keeping
    npm install
    ```
 
-3. Set up environment variables in `.env.local` for the frontend (you can skip this for now!):
+3. Set up environment variables in `.env.local` for the frontend:
 
    ```bash
    NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
