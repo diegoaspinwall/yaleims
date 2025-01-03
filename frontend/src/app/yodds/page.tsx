@@ -10,6 +10,8 @@ import TableHeader from "@src/components/Scores/TableHeader";
 import MatchesTable from "@src/components/Scores/MatchTable";
 //YOdds table import
 import MatchesTableYO from "@src/components/YOdds/MatchTable";
+//YOdds table for pending bets import
+import MatchesTablePending from "@src/components/YOdds/MatchTablePending";
 
 import { Match, CollegeStats } from "@src/types/components";
 
@@ -35,7 +37,7 @@ const ScoresPage: React.FC = () => {
     const fetchScores = async () => {
       try {
         const response = await fetch(
-          "https://us-central1-yims-125a2.cloudfunctions.net/getMatches?type=past",
+          "https://us-central1-yims-125a2.cloudfunctions.net/getMatches?type=future",
           {
             method: "GET",
             headers: {
@@ -139,6 +141,17 @@ const ScoresPage: React.FC = () => {
       <p className="md:text-xl font-bold text-center mb-2 pt-2">
         Pending Predictions
       </p>
+
+      <div className="min-w-full flex-col items-center md:px-20">             
+        {
+        //<TableHeader handleFilterChange={handleFilterChange} />
+        }
+
+        <MatchesTablePending
+          filteredMatches={filteredMatches}
+          handleCollegeClick={handleCollegeClick}
+        />
+      </div>
 
       <p className="md:text-xl font-bold text-center mb-2 pt-2">
         Upcoming Games
