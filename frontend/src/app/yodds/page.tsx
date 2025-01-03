@@ -8,7 +8,11 @@ import CollegeSummaryCardMobile from "@src/components/Scores/CollegeSummaryCardM
 import { FiltersContext } from "@src/context/FiltersContext";
 import TableHeader from "@src/components/Scores/TableHeader";
 import MatchesTable from "@src/components/Scores/MatchTable";
+//YOdds table import
+import MatchesTableYO from "@src/components/YOdds/MatchTable";
+
 import { Match, CollegeStats } from "@src/types/components";
+
 
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -128,6 +132,10 @@ const ScoresPage: React.FC = () => {
         YOdds!
       </h1>
 
+      <p className="md:text-4xl text-xl font-bold text-center mb-2 pt-2">
+        Current YCoins: 1000
+      </p>   
+
       <p className="md:text-xl font-bold text-center mb-2 pt-2">
         Pending Predictions
       </p>
@@ -163,7 +171,7 @@ const ScoresPage: React.FC = () => {
         }
         
 
-        <MatchesTable
+        <MatchesTableYO
           filteredMatches={filteredMatches}
           handleCollegeClick={handleCollegeClick}
         />
