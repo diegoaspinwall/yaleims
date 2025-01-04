@@ -34,8 +34,7 @@ const INITIALBALANCE = 500; // Initial balance for the user
 
 export const getMyAvailablePoints = functions.https.onRequest(async (req, res) => {
   corsHandler(req, res, async () => {
-    const { email } = req.body; // Expect email to be passed as query parameter
-    // const { email } = req.query; // Expect email to be passed as query parameter
+    const { email } = req.body; // Expect email to be passed in query body
 
     if (!email) {
       return res.status(400).send("Email query parameter is required");
@@ -51,9 +50,7 @@ export const getMyAvailablePoints = functions.https.onRequest(async (req, res) =
       }
 
       const userData = userDoc.data();
-      // const initialBalance = 500; // Initial balance for the user
 
-      // let totalPoints = initialBalance; // Start with the initial balance
       let totalPoints = INITIALBALANCE; // Start with the initial balance
 
       // If the user has placed any bets
@@ -70,14 +67,13 @@ export const getMyAvailablePoints = functions.https.onRequest(async (req, res) =
           const matchDoc = await matchRef.get();
           const matchData = matchDoc.data();
 
-          if (matchData?.winner || matchData?.forfeit) {
+          if (matchData?.winner) { // the game has been played if there is a winner
             // Check if the betOption matches the winner
-            if (betOption === matchData.winner || matchData.forfeit == betOption) {
+            if (betOption === matchData.winner || (matchData.forfeit == true && "Forfeit" == betOption)) {
               // If the user won the bet, add the bet amount * (betOdds+1) to their total
               totalPoints += betAmount * (betOdds+1);
             }
             // If the user lost the bet, nothing is added (already deducted)
-            // totalPoints -= betAmount; // This is redundant as we already subtracted earlier
           }
         }
       }
@@ -135,13 +131,6 @@ export const addBet = functions.https.onRequest(async (req, res) => {
         bets: admin.firestore.FieldValue.arrayUnion(bet),
       });
 
-      /*
-      // 5. Deduct points from user's balance (assuming points = betAmount for simplicity)
-      await userRef.update({
-        points: admin.firestore.FieldValue.increment(-betAmount),
-      });
-      */
-
       return res.status(200).send("Bet added successfully");
     } catch (error) {
       console.error("Error adding bet:", error);
@@ -179,18 +168,6 @@ export const deleteBet = functions.https.onRequest(async (req, res) => {
         bets: updatedBets,
       });
 
-      /*
-      // 3. Re-add points to the user's balance
-      const betToRemove = userData?.bets?.find(
-        (bet: any) => bet.matchId === matchId
-      );
-      if (betToRemove) {
-        await userRef.update({
-          points: admin.firestore.FieldValue.increment(betToRemove.betAmount),
-        });
-      }
-      */
-
       return res.status(200).send("Bet deleted successfully");
     } catch (error) {
       console.error("Error deleting bet:", error);
@@ -217,8 +194,6 @@ export const updateUserLeaderboard = functions.https.onRequest(async (req, res) 
       // Loop over each user and calculate their total points
       for (const userDoc of usersSnapshot.docs) {
         const userData = userDoc.data();
-        // const initialBalance = 500; // Each user starts with 500 points
-        // let totalPoints = initialBalance; // Start with the initial balance
         let totalPoints = INITIALBALANCE; // Start with the initial balance
 
         // If the user has placed any bets
@@ -226,10 +201,7 @@ export const updateUserLeaderboard = functions.https.onRequest(async (req, res) 
           for (const bet of userData.bets) {
             const { matchId, betAmount, betOption, betOdds } = bet;
 
-            // 1. Add the bet amount to the total (pending bets, so it's negative)
-            // totalPoints -= betAmount;
-
-            // 2. If the match is scored (i.e., winner exists), calculate the result of the bet
+            // If the match is scored (i.e., winner exists), calculate the result of the bet
             const matchRef = db.collection("matches_dha_testing").doc(matchId);
             // const matchRef = db.collection("matches").doc(matchId);
             const matchDoc = await matchRef.get();
@@ -238,12 +210,11 @@ export const updateUserLeaderboard = functions.https.onRequest(async (req, res) 
             if (matchData?.winner) { // this means the game has been played
               // Check if the betOption matches the winner
               totalPoints -= betAmount;
-              if (betOption === matchData.winner) {
+              if (betOption === matchData.winner || (matchData.forfeit == true && "Forfeit" == betOption)) {
                 // If the user won the bet, add the bet amount * betOdds to their total
                 totalPoints += betAmount * (betOdds+1);
               }
               // If the user lost the bet, nothing is added (they've already lost the betAmount)
-              // This is redundant as we already subtracted betAmount earlier
             }
           }
         }
