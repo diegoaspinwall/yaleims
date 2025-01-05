@@ -20,14 +20,12 @@ import {TableRowProps, Match } from '@src/types/components';
 
       {/* Combine Colleges and Scores into one column */}
       <div className="text-left md:px-6 py-4 px-3 text-sm grid md:grid-cols-[0.5fr_0.5fr_0.3fr_0.3fr] md:grid-rows-1 grid-rows-2 grid-flow-col gap-2 items-center">
-        {/* Determine the winner and loser 
-            JUST KIDDING we don't need a winner and loser!
-        */}
+
+        {/* In reality we will have an if statement to determine whether the bet is for a forfeit, team1win, team2win or draw based on the bet object
+        but this will be implemented when we're ready to fully integrate. For now a placeholder to display what it WILL look like.*/}
         
         {match.home_college == "GH" ? (
-          // Home college wins
-          //JUST KIDDING!
-          //We have the same format for every match
+          // EXAMPLE: home college wins
           <>
             <div className="items-start text-xs md:text-sm">
               <strong
@@ -44,95 +42,72 @@ import {TableRowProps, Match } from '@src/types/components';
                   className="mr-2 object-contain"
                   unoptimized
                 />
-                {toCollegeName[match.home_college]} +{sportsMap[match.sport]}0
-                {//Replace match.sport with the moneyline odds
-                }
+                {toCollegeName[match.home_college]}
               </strong>
             </div>
-            {match.away_college != "Bye" ? (
-              <div 
-                className={`${
-                  match.away_college === "" ? "hidden" : "block"
-                } items-start text-xs md:text-sm`}
+            <div 
+              className={`${
+                match.away_college === "" ? "hidden" : "block"
+              } items-start text-xs md:text-sm`}
+            >
+              <strong
+                className="text-black flex items-center"
               >
-                <strong
-                  className="text-black flex items-center"
-                >
-                  <Image
-                    src={`/college_flags/${
-                      toCollegeName[match.away_college]
-                    }.png`}
-                    alt={match.away_college}
-                    width={20}
-                    height={20}
-                    className="mr-2 object-contain"
-                    unoptimized
-                  />
-                  
-                  {toCollegeName[match.away_college]}
-                  {//Replace match.sport with the moneyline odds
-                  }
-                </strong>
-              </div>
-            ) 
-            
-            
-            : (
-              <div className="pl-7 font-bold">BYE</div>
-            )}
-
-
+                <Image
+                  src={`/college_flags/${
+                    toCollegeName[match.away_college]
+                  }.png`}
+                  alt={match.away_college}
+                  width={20}
+                  height={20}
+                  className="mr-2 object-contain"
+                  unoptimized
+                />
+                
+                {toCollegeName[match.away_college]}
+              </strong>
+            </div>
             
             <div className="text-left hidden md:block"            >
               <strong> 
-                100 Coins 
+                100 coins wagered
+              </strong>
+            </div>
+            <div className="text-left hidden md:block"            >
+              <strong> 
+                200 coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
             onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
-            style={{background:'#FFD7D8', border:"6px solid #FFD7D8", borderRadius: '10px'}}
+            style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
-
-                CANCEL
+                Cancel
               </strong>
             </div>
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                100 Coins
+                100 coins wagered
+              </strong>
+            </div>
+            <div className="text-right md:hidden text-xs"            >
+              <strong>
+                200 coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
             onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
-            style={{background:'#FFD7D8', border:"6px solid #FFD7D8", borderRadius: '10px'}}
+            style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
-                CANCEL
+                Cancel
               </strong>
             </div>
-            
-              
           </>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ) : match.home_college == "BF" ? (
-          // Away college wins
-          // Home college wins
-          //JUST KIDDING!
-          //We have the same format for every match
+          // EXAMPLE: away college wins
           <>
             <div className="items-start text-xs md:text-sm">
               <strong
@@ -149,99 +124,73 @@ import {TableRowProps, Match } from '@src/types/components';
                   unoptimized
                 />
                 {toCollegeName[match.home_college]}
-                {//Replace match.sport with the moneyline odds
-                }
               </strong>
             </div>
-            {match.away_college != "Bye" ? (
-              <div 
-                className={`${
-                  match.away_college === "" ? "hidden" : "block"
-                } items-start text-xs md:text-sm`}
+            <div 
+              className={`${
+                match.away_college === "" ? "hidden" : "block"
+              } items-start text-xs md:text-sm`}
+            >
+              <strong
+                className="text-black flex items-center"
+                style={{background:'#D7FFEA', border:"6px solid #D7FFEA", borderRadius: '10px'}}
               >
-                <strong
-                  className="text-black flex items-center"
-                  style={{background:'#D7FFEA', border:"6px solid #D7FFEA", borderRadius: '10px'}}
-                >
-                  <Image
-                    src={`/college_flags/${
-                      toCollegeName[match.away_college]
-                    }.png`}
-                    alt={match.away_college}
-                    width={20}
-                    height={20}
-                    className="mr-2 object-contain"
-                    unoptimized
-                  />
+                <Image
+                  src={`/college_flags/${
+                    toCollegeName[match.away_college]
+                  }.png`}
+                  alt={match.away_college}
+                  width={20}
+                  height={20}
+                  className="mr-2 object-contain"
+                  unoptimized
+                />
                   
-                  {toCollegeName[match.away_college]} +{sportsMap[match.sport]}00
-                  {//Replace match.sport with the moneyline odds
-                  }
-                </strong>
-              </div>
-            ) 
-            
-            
-            : (
-              <div className="pl-7 font-bold">BYE</div>
-            )}
-
-
+                {toCollegeName[match.away_college]}
+              </strong>
+            </div>
             
             <div className="text-left hidden md:block"            >
               <strong> 
-                100 Coins 
+                50 coins wagered
+              </strong>
+            </div>
+            <div className="text-left hidden md:block"            >
+              <strong> 
+                200 coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
             onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
-            style={{background:'#FFD7D8', border:"6px solid #FFD7D8", borderRadius: '10px'}}
+            style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
-
-                CANCEL
+                Cancel
               </strong>
             </div>
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                100 Coins
+                50 coins wagered
+              </strong>
+            </div>
+            <div className="text-right md:hidden text-xs"            >
+              <strong>
+                200 coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
             onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
-            style={{background:'#FFD7D8', border:"6px solid #FFD7D8", borderRadius: '10px'}}
+            style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
-                CANCEL
+                Cancel
               </strong>
             </div>
-            
-              
           </>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         ) : match.home_college == "JE" ? (
-          // Draw
+          // EXAMPLE: draw
           <> 
             <div className="items-start text-xs md:text-sm">
               <strong
@@ -258,75 +207,73 @@ import {TableRowProps, Match } from '@src/types/components';
                   className="mr-2 object-contain"
                   unoptimized
                 />
-                {toCollegeName[match.home_college]} TIE +{sportsMap[match.sport]}00
-                {//Replace match.sport with the moneyline odds
-                }
+                {toCollegeName[match.home_college]}
               </strong>
-              </div>
-              <div 
-                className={`${
-                  match.away_college === "" ? "hidden" : "block"
-                } items-start text-xs md:text-sm`}
+            </div>
+            <div 
+              className={`${
+                match.away_college === "" ? "hidden" : "block"
+              } items-start text-xs md:text-sm`}
+            >
+              <strong
+                className="text-black flex items-center"
+                style={{background:'#CFF6FF', border:"6px solid #CFF6FF", borderRadius: '10px'}}
               >
-                <strong
-                  className="text-black flex items-center"
-                  style={{background:'#CFF6FF', border:"6px solid #CFF6FF", borderRadius: '10px'}}
-                >
-                  <Image
-                    src={`/college_flags/${
-                      toCollegeName[match.away_college]
-                    }.png`}
-                    alt={match.away_college}
-                    width={20}
-                    height={20}
-                    className="mr-2 object-contain"
-                    unoptimized
-                  />
-                  
-                  {toCollegeName[match.away_college]} TIE
-                  {//Replace match.sport with the moneyline odds
-                  }
-                </strong>
-              </div>
-              
-            
-
-
-            
+                <Image
+                  src={`/college_flags/${
+                    toCollegeName[match.away_college]
+                  }.png`}
+                  alt={match.away_college}
+                  width={20}
+                  height={20}
+                  className="mr-2 object-contain"
+                  unoptimized
+                />
+                
+                {toCollegeName[match.away_college]}
+              </strong>
+            </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                100 Coins 
+                100 coins wagered
+              </strong>
+            </div>
+            <div className="text-left hidden md:block"            >
+              <strong> 
+                120 coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
             onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
-            style={{background:'#FFD7D8', border:"6px solid #FFD7D8", borderRadius: '10px'}}
+            style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
-
-                CANCEL
+                Cancel
               </strong>
             </div>
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                100 Coins
+                100 coins wagered
+              </strong>
+            </div>
+            <div className="text-right md:hidden text-xs"            >
+              <strong>
+                120 coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
             onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
-            style={{background:'#FFD7D8', border:"6px solid #FFD7D8", borderRadius: '10px'}}
+            style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
-                CANCEL
+                Cancel
               </strong>
             </div>
-            
-              
           </>
 
         ) : (
-          // Forfeit
+          // EXAMPLE: forfeit
           <> 
             <div className="items-start text-xs md:text-sm">
               <strong
@@ -343,75 +290,72 @@ import {TableRowProps, Match } from '@src/types/components';
                   className="mr-2 object-contain"
                   unoptimized
                 />
-                EITHER {toCollegeName[match.home_college]} OR
-                {//Replace match.sport with the moneyline odds
-                }
+                {toCollegeName[match.home_college]}
               </strong>
-              </div>
-              <div 
-                className={`${
-                  match.away_college === "" ? "hidden" : "block"
-                } items-start text-xs md:text-sm`}
+            </div>
+            <div 
+              className={`${
+                match.away_college === "" ? "hidden" : "block"
+              } items-start text-xs md:text-sm`}
+            >
+              <strong
+                className="text-black flex items-center"
+                style={{background:'#E4E4E4', border:"6px solid #E4E4E4", borderRadius: '10px'}}
               >
-                <strong
-                  className="text-black flex items-center"
-                  style={{background:'#E4E4E4', border:"6px solid #E4E4E4", borderRadius: '10px'}}
-                >
-                  <Image
-                    src={`/college_flags/${
-                      toCollegeName[match.away_college]
-                    }.png`}
-                    alt={match.away_college}
-                    width={20}
-                    height={20}
-                    className="mr-2 object-contain"
-                    unoptimized
-                  />
-                  
-                  {toCollegeName[match.away_college]} FORFEIT +{sportsMap[match.sport]}00
-                  {//Replace match.sport with the moneyline odds
-                  }
-                </strong>
-              </div>
+                <Image
+                  src={`/college_flags/${
+                    toCollegeName[match.away_college]
+                  }.png`}
+                  alt={match.away_college}
+                  width={20}
+                  height={20}
+                  className="mr-2 object-contain"
+                  unoptimized
+                />
+                
+                {toCollegeName[match.away_college]}
+              </strong>
+            </div>
               
-            
-
-
-            
             <div className="text-left hidden md:block"            >
               <strong> 
-                100 Coins 
+                100 coins wagered
+              </strong>
+            </div>
+            <div className="text-left hidden md:block"            >
+              <strong> 
+                300 coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
             onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
-            style={{background:'#FFD7D8', border:"6px solid #FFD7D8", borderRadius: '10px'}}
+            style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
-
-                CANCEL
+                Cancel
               </strong>
             </div>
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                100 Coins
+                100 coins wagered
+              </strong>
+            </div>
+            <div className="text-right md:hidden text-xs"            >
+              <strong>
+                300 coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
             onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
-            style={{background:'#FFD7D8', border:"6px solid #FFD7D8", borderRadius: '10px'}}
+            style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
-                CANCEL
+                Cancel
               </strong>
             </div>
-            
-              
           </>
-
         ) 
-      
       
       }
       </div>
