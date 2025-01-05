@@ -1,3 +1,10 @@
+interface Odds {
+  team1Win: number;
+  team2Win: number;
+  draw: number;
+  forfeit: number;
+}
+
 // Function to calculate odds
 // we have each team's rates for wins, losses, draws and forfeits
 // we also have the betting volume for each of the four categories
@@ -63,7 +70,7 @@ function oddsCalculator(
 
 
 // Function to convert odds ratios (percentages) to moneyline values for all outcomes
-function ratiosToMoneylines(odds: Odds): { team1Moneyline: number; team2Moneyline: number; drawMoneyline: number; forfeitMoneyline} {
+function ratiosToMoneylines(odds: Odds): { team1Moneyline: number; team2Moneyline: number; drawMoneyline: number; forfeitMoneyline: number} {
   const convertToMoneyline = (percentage: number): number => {
     if (percentage <= 0 || percentage >= 1) {
       throw new Error("Percentage must be between 0 and 1 (exclusive)");
@@ -82,7 +89,7 @@ function ratiosToMoneylines(odds: Odds): { team1Moneyline: number; team2Moneylin
 }
 
 // Function to convert moneyline values back to odds ratios (percentages) for all outcomes
-function moneylinesToRatios(moneylines: { team1Moneyline: number; team2Moneyline: number; drawMoneyline: number; forfeitMoneyline}): Odds {
+function moneylinesToRatios(moneylines: { team1Moneyline: number; team2Moneyline: number; drawMoneyline: number; forfeitMoneyline: number}): Odds {
   const convertToRatio = (moneyline: number): number => {
     if (moneyline > 0) {
       return 100 / (moneyline + 100);
