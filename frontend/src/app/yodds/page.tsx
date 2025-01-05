@@ -130,16 +130,28 @@ const ScoresPage: React.FC = () => {
 
   return (
     <div className="min-h-screen p-8 flex-col items-center">
+{/*
       <h1 className="md:text-4xl text-xl font-bold text-center mb-8 pt-8">
-        YOdds!
+        YOdds
       </h1>
+*/}
 
-      <p className="md:text-4xl text-xl font-bold text-center mb-2 pt-2">
-        Current YCoins: 1000
-      </p>   
+      <div className="flex justify-center items-center mb-4 pt-10">
+        <div
+          className="p-6 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white font-bold text-xl rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+          style={{ maxWidth: '250px', minWidth: '200px' }}
+        >
+          <p className="text-center">My YCoins:</p>
+          <p className="text-center text-3xl">1000</p>
+        </div>
+      </div>
 
-      <p className="md:text-xl font-bold text-center mb-2 pt-2">
+      <p className="md:text-xl font-bold text-center mb-4 pt-6">
         Pending Predictions
+      </p>
+
+      <p className="text-sm text-center text-gray-500 mb-8">
+	Predictions may only be canceled 24 hours or more before the game.
       </p>
 
       <div className="min-w-full flex-col items-center md:px-20">             
@@ -153,8 +165,12 @@ const ScoresPage: React.FC = () => {
         />
       </div>
 
-      <p className="md:text-xl font-bold text-center mb-2 pt-2">
+      <p className="md:text-xl font-bold text-center mb-4 pt-6">
         Upcoming Games
+      </p>
+
+      <p className="text-sm text-center text-gray-500 mb-8">
+	Select an upcoming game outcome to speculate on by clicking the corresponding box. The predicted <a href="https://www.investopedia.com/money-line-bet-5217219#:~:text=Investopedia%20%2F%20Zoe%20Hansen-,What%20Is%20a%20Money%20Line%20Bet%3F,a%20couple%20of%20possible%20outcomes." className="text-blue-500 hover:underline" target="_blank" rel="noopener noreferrer">Moneyline</a> odds are placed next to each outcome.
       </p>
 
       

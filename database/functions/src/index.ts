@@ -57,6 +57,7 @@ export const getMyAvailablePoints = functions.https.onRequest(async (req, res) =
       if (userData?.bets) {
         for (const bet of userData.bets) {
           const { matchId, betAmount, betOption, betOdds } = bet;
+          // TODO: add team1, team2 and sport to bet!
 
           // 1. Add the bet amount to the total (pending, so it's negative)
           totalPoints -= betAmount;
