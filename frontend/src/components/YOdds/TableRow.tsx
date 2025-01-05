@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import {
     toCollegeName,
@@ -7,8 +8,34 @@ import {
 
 import {TableRowProps, Match } from '@src/types/components';
 
-  //TableRow Component
-  const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => (
+//TableRow Component
+const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inputValue, setInputValue] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState<string>('');
+
+  // Function to open modal and set selected option
+  const handleOptionClick = (option: string) => {
+    setSelectedOption(option);
+    setIsModalOpen(true);
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setInputValue(''); // Reset the input value when closing
+  };
+
+  // Function to handle submitting the input
+  const handleSubmit = () => {
+    console.log(`Submitted ${selectedOption} with value: ${inputValue}`);
+
+    window.location.reload();
+
+    closeModal(); // Close the modal after submitting
+  };
+
+  return (
     <div className="bg-white grid grid-cols-[auto_1fr_auto] items-center">
       <div className="md:px-6 pl-2 py-4 text-xs md:text-sm text-gray-500">
         {new Date(match.timestamp).toLocaleString("en-US", {
@@ -25,7 +52,7 @@ import {TableRowProps, Match } from '@src/types/components';
             <div className="items-start text-xs md:text-sm">
               <strong
                 className="cursor-pointer text-black flex items-center"
-                onClick={() => handleCollegeClick(match.home_college)} // Replace with your function
+                onClick={() => handleOptionClick(toCollegeName[match.home_college])}
                 style={{background:'#D7FFEA', border:"6px solid #D7FFEA", borderRadius: '10px'}}
               >
                 <Image
@@ -39,8 +66,6 @@ import {TableRowProps, Match } from '@src/types/components';
                   unoptimized
                 />
                 {toCollegeName[match.home_college]} +{sportsMap[match.sport]}0
-                {//Replace match.sport with the moneyline odds
-                }
               </strong>
             </div>
 
@@ -52,7 +77,7 @@ import {TableRowProps, Match } from '@src/types/components';
             >
               <strong
                 className="cursor-pointer text-black flex items-center"
-                onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+                onClick={() => handleOptionClick(toCollegeName[match.away_college])}
               >
                 <Image
                   src={`/college_flags/${
@@ -66,13 +91,11 @@ import {TableRowProps, Match } from '@src/types/components';
                 />
                 
                 {toCollegeName[match.away_college]} +{sportsMap[match.sport]}0
-                {//Replace match.sport with the moneyline odds
-                }
               </strong>
             </div>
             
             <div className="cursor-pointer text-left hidden md:block"
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleOptionClick('Draw')}
             style={{background:'#CFF6FF', border:"6px solid #CFF6FF", borderRadius: '10px'}}
             >
               <strong> 
@@ -80,17 +103,16 @@ import {TableRowProps, Match } from '@src/types/components';
               </strong>
             </div>
             <div className="cursor-pointer text-left hidden md:block" 
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleOptionClick('Forfeit')}
             style={{background:'#E4E4E4', border:"6px solid #E4E4E4", borderRadius: '10px'}}
             >
               <strong>
-
                 Forfeit +1000
               </strong>
             </div>
 
             <div className="cursor-pointer text-right md:hidden text-xs"
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleOptionClick('Draw')}
             style={{background:'#CFF6FF', border:"6px solid #CFF6FF", borderRadius: '10px'}}
             >
               <strong>
@@ -98,7 +120,7 @@ import {TableRowProps, Match } from '@src/types/components';
               </strong>
             </div>
             <div className="cursor-pointer text-right md:hidden text-xs"
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleOptionClick('Forfeit')}
             style={{background:'#E4E4E4', border:"6px solid #E4E4E4", borderRadius: '10px'}}
             >
               <strong>
@@ -111,7 +133,42 @@ import {TableRowProps, Match } from '@src/types/components';
       </div>
 
       <div className="text-center px-2 py-1">{emojiMap[match.sport]}</div>
+
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h3 className="text-lg font-semibold mb-4">
+              Enter value for {selectedOption}
+            </h3>
+            <input
+              type="number"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="border p-2 w-full rounded-lg mb-4"
+              placeholder={`Enter a value for ${selectedOption}`}
+            />
+            <div className="flex justify-end gap-4">
+              <button
+                className="bg-gray-300 px-4 py-2 rounded-lg"
+                onClick={closeModal}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </div>
   );
+};
 
 export default TableRow;
