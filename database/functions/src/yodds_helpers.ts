@@ -31,35 +31,43 @@ function oddsCalculator(
 
   // Use provided win percentages and forfeit rates
   const pastGamesWeight = 1; // Weight based on the assumption that win percentages are always provided
-  const team1Performance = team1WinPercentage;
-  const team2Performance = team2WinPercentage;
-  const drawPerformance = 1 - team1WinPercentage - team2WinPercentage;
-
+  
+  // Calculate total performance to normalize
+  const totalPerformance = team1WinPercentage + team2WinPercentage;
+  
+  // Normalize win percentages if their sum exceeds 1
+  const normalizedTeam1Performance = totalPerformance > 1 ? team1WinPercentage / totalPerformance : team1WinPercentage;
+  const normalizedTeam2Performance = totalPerformance > 1 ? team2WinPercentage / totalPerformance : team2WinPercentage;
+  const normalizedDrawPerformance = totalPerformance > 1 ? 0 : 1 - totalPerformance;
+  
   // Forfeits: Use the forfeit rate (assuming forfeit rate represents the probability of a forfeit)
   const team1Forfeit = team1ForfeitRate;
   const team2Forfeit = team2ForfeitRate;
-  const forfeitPerformance = 1 - team1Forfeit - team2Forfeit - drawPerformance; // The remaining chance for a forfeit
-
+  
+  // Adjust the forfeit probability to avoid exceeding 1
+  const remainingProbability = 1 - normalizedTeam1Performance - normalizedTeam2Performance - normalizedDrawPerformance;
+  const normalizedForfeitPerformance = Math.max(0, remainingProbability - team1Forfeit - team2Forfeit);
+  
   // Combine past performance, forfeit rates, and betting volume using a weighted average
   const team1Win =
-    (team1Performance * pastGamesWeight + team1BettingShare * bettingWeight) /
+    (normalizedTeam1Performance * pastGamesWeight + team1BettingShare * bettingWeight) /
     (pastGamesWeight + bettingWeight || 1);
-
+  
   const team2Win =
-    (team2Performance * pastGamesWeight + team2BettingShare * bettingWeight) /
+    (normalizedTeam2Performance * pastGamesWeight + team2BettingShare * bettingWeight) /
     (pastGamesWeight + bettingWeight || 1);
-
+  
   const draw =
-    (drawPerformance * pastGamesWeight + drawBettingShare * bettingWeight) /
+    (normalizedDrawPerformance * pastGamesWeight + drawBettingShare * bettingWeight) /
     (pastGamesWeight + bettingWeight || 1);
-
+  
   const forfeit =
-    (forfeitPerformance * pastGamesWeight + forfeitBettingShare * bettingWeight) /
+    (normalizedForfeitPerformance * pastGamesWeight + forfeitBettingShare * bettingWeight) /
     (pastGamesWeight + bettingWeight || 1);
-
+  
   // Normalize the odds to ensure they sum to 1
   const totalOdds = team1Win + team2Win + draw + forfeit;
-
+  
   return {
     team1Win: totalOdds > 0 ? team1Win / totalOdds : defaultOdds.team1Win,
     team2Win: totalOdds > 0 ? team2Win / totalOdds : defaultOdds.team2Win,
