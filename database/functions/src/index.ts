@@ -30,6 +30,22 @@ interface College {
   points: number;
 }
 
+interface AddBetRequestBody {
+  email: string;
+  matchId: string;
+  betAmount: number;
+  betOption: string;
+  betOdds: number;
+  away_college: string;
+  home_college: string;
+  sport: string;
+}
+
+interface DelBetRequestBody {
+  email: string;
+  matchId: string;
+}
+
 const INITIALBALANCE = 500; // Initial balance for the user
 
 export const getMyAvailablePoints = functions.https.onRequest(async (req, res) => {
@@ -89,9 +105,8 @@ export const getMyAvailablePoints = functions.https.onRequest(async (req, res) =
 
 
 export const addBet = functions.https.onRequest(async (req, res) => {
-  // TODO: this shouldn't be async
   corsHandler(req, res, async () => {
-    const { email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport} = req.body;
+    const { email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport }: AddBetRequestBody = req.body;
 
     // Validation
     if (!email || !matchId || !betAmount || !betOption || !away_college || !home_college || !sport) {
@@ -140,6 +155,27 @@ export const addBet = functions.https.onRequest(async (req, res) => {
         bets: admin.firestore.FieldValue.arrayUnion(bet),
       });
 
+      // 5. Update the match's betting volume
+      if (betOption == "Forfeit") {
+        matchRef.update({
+          forfeit_volume: admin.firestore.FieldValue.increment(betAmount)
+        })
+      } else if (betOption == "Draw") {
+        matchRef.update({
+          draw_volume: admin.firestore.FieldValue.increment(betAmount)
+        })
+      } else if (betOption == away_college) {
+        matchRef.update({
+          away_college_volume: admin.firestore.FieldValue.increment(betAmount)
+        })
+      } else if (betOption == home_college) {
+        matchRef.update({
+          home_college_volume: admin.firestore.FieldValue.increment(betAmount)
+        })
+      } else {
+        console.error("betOption doesn't exist")
+      }
+        
       return res.status(200).send("Bet added successfully");
     } catch (error) {
       console.error("Error adding bet:", error);
@@ -149,9 +185,8 @@ export const addBet = functions.https.onRequest(async (req, res) => {
 });
 
 export const deleteBet = functions.https.onRequest(async (req, res) => {
-  // TODO: this shouldn't be async
   corsHandler(req, res, async () => {
-    const { email, matchId } = req.body;
+    const { email, matchId }: DelBetRequestBody = req.body;
 
     // Validation
     if (!email || !matchId) {
@@ -165,14 +200,47 @@ export const deleteBet = functions.https.onRequest(async (req, res) => {
       if (!userDoc.exists) {
         return res.status(404).send("User not found");
       }
+      const userData = userDoc.data()
 
-      // 1. Find the bet and remove it
-      const userData = userDoc.data();
+      if (!userData || !Array.isArray(userData.bets)) {
+        return res.status(404).send("No bets found for this user");
+      }
+
+      const matchRef = db.collection("matches_dha_testing").doc(matchId);
+      // const matchRef = db.collection("matches").doc(matchId);
+      const matchDoc = await matchRef.get();
+      if (!matchDoc.exists) {
+        return res.status(404).send("Match not found");
+      }
+
+      // 1. Update the match's betting volume
+      const bet = userData.bets.find((bet: any) => bet.matchId === matchId);
+      if (bet.betOption == "Forfeit") {
+        matchRef.update({
+          forfeit_volume: admin.firestore.FieldValue.increment(bet.betAmount)
+        })
+      } else if (bet.betOption == "Draw") {
+        matchRef.update({
+          draw_volume: admin.firestore.FieldValue.increment(bet.betAmount)
+        })
+      } else if (bet.betOption == bet.away_college) {
+        matchRef.update({
+          away_college_volume: admin.firestore.FieldValue.increment(bet.betAmount)
+        })
+      } else if (bet.betOption == bet.home_college) {
+        matchRef.update({
+          home_college_volume: admin.firestore.FieldValue.increment(bet.betAmount)
+        })
+      } else {
+        console.error("betOption doesn't exist")
+      }
+
+      // 2. Find the bet and remove it
       const updatedBets = (userData?.bets || []).filter(
         (bet: any) => bet.matchId !== matchId
       );
 
-      // 2. Update user's bets
+      // 3. Update user's bets
       await userRef.update({
         bets: updatedBets,
       });

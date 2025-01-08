@@ -98,8 +98,6 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
 
     setBetDetails(betData);
 
-    // window.location.reload(); // TODO: ensure bet is added before reloading
-
     closeModal(); // Close the modal after submitting
   };
 
@@ -135,7 +133,6 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
             <div className="items-start text-xs md:text-sm">
               <strong
                 className="cursor-pointer text-black flex items-center"
-                // onClick={() => handleOptionClick(toCollegeName[match.home_college])}
                 onClick={() => handleOptionClick(match.home_college)}
                 style={{background:'#D7FFEA', border:"6px solid #D7FFEA", borderRadius: '10px'}}
               >
@@ -162,7 +159,6 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
               <strong
                 className="cursor-pointer text-black flex items-center"
                 onClick={() => handleOptionClick(match.away_college)}
-                // onClick={() => handleOptionClick(toCollegeName[match.away_college])}
               >
                 <Image
                   src={`/college_flags/${
