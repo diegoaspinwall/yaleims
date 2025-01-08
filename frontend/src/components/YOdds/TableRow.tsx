@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
     toCollegeName,
@@ -7,12 +7,65 @@ import {
   } from "@src/data/helpers";
 
 import {TableRowProps, Match } from '@src/types/components';
+import { useUser } from '../../context/UserContext.jsx';
 
 //TableRow Component
 const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [selectedOption, setSelectedOption] = useState<string>('');
+  const [betDetails, setBetDetails] = useState<{
+    email: string | null;
+    matchId: string;
+    betAmount: number;
+    betOption: string;
+    betOdds: string;
+  } | null>(null);
+  const [isBetAdded, setIsBetAdded] = useState(false);
+
+  const getUserEmail = () => {
+    const { user } = useUser(); // Access the user object from the context
+
+    // If user exists and has an email, return the email; otherwise return null
+    return user ? user.email : null;
+  };
+
+  const userEmail = getUserEmail();
+
+  const addBet = async (email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport) => {
+    try {
+      const response = await fetch(
+        "https://us-central1-yims-125a2.cloudfunctions.net/addBet",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            matchId,
+            betAmount,
+            betOption,
+            betOdds,
+            away_college,
+            home_college,
+            sport,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorBody = await response.text();  // Log the response text for more info
+        console.error(`Response not OK: ${response.status} - ${errorBody}`);
+      } else {
+        console.log('Bet added successfully!');
+        setIsBetAdded(true);
+      }
+
+    } catch (error) {
+      console.error("Failed to fetch leaderboard:", error);
+    }
+  };
 
   // Function to open modal and set selected option
   const handleOptionClick = (option: string) => {
@@ -29,11 +82,41 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
   // Function to handle submitting the input
   const handleSubmit = () => {
     console.log(`Submitted ${selectedOption} with value: ${inputValue}`);
+    const betAmount = parseFloat(inputValue);
+    const betData = {
+      email: userEmail,
+      matchId: match.matchId,
+      betAmount: betAmount, // Ensure it's a valid number
+      betOption: selectedOption,
+      betOdds: 2.5, // Example odds
+      away_college: match.away_college,
+      home_college: match.home_college,
+      sport: match.sport,
+    };
 
-    window.location.reload();
+    console.log("Bet details to be submitted:", betData);
+
+    setBetDetails(betData);
+
+    // window.location.reload(); // TODO: ensure bet is added before reloading
 
     closeModal(); // Close the modal after submitting
   };
+
+  useEffect(() => {
+    if (betDetails && !isBetAdded) {
+      const { email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport } = betDetails;
+      if (email) {
+        addBet(email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport);
+      }
+    }
+  }, [betDetails, isBetAdded]); // Runs whenever betDetails changes
+
+  useEffect(() => {
+    if (isBetAdded) {
+      window.location.reload();
+    }
+  }, [isBetAdded]);
 
   return (
     <div className="bg-white grid grid-cols-[auto_1fr_auto] items-center">
@@ -52,7 +135,8 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
             <div className="items-start text-xs md:text-sm">
               <strong
                 className="cursor-pointer text-black flex items-center"
-                onClick={() => handleOptionClick(toCollegeName[match.home_college])}
+                // onClick={() => handleOptionClick(toCollegeName[match.home_college])}
+                onClick={() => handleOptionClick(match.home_college)}
                 style={{background:'#D7FFEA', border:"6px solid #D7FFEA", borderRadius: '10px'}}
               >
                 <Image
@@ -77,7 +161,8 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
             >
               <strong
                 className="cursor-pointer text-black flex items-center"
-                onClick={() => handleOptionClick(toCollegeName[match.away_college])}
+                onClick={() => handleOptionClick(match.away_college)}
+                // onClick={() => handleOptionClick(toCollegeName[match.away_college])}
               >
                 <Image
                   src={`/college_flags/${

@@ -89,11 +89,12 @@ export const getMyAvailablePoints = functions.https.onRequest(async (req, res) =
 
 
 export const addBet = functions.https.onRequest(async (req, res) => {
+  // TODO: this shouldn't be async
   corsHandler(req, res, async () => {
-    const { email, matchId, betAmount, betOption, betOdds} = req.body;
+    const { email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport} = req.body;
 
     // Validation
-    if (!email || !matchId || !betAmount || !betOption) {
+    if (!email || !matchId || !betAmount || !betOption || !away_college || !home_college || !sport) {
       return res.status(400).send("Missing required fields");
     }
 
@@ -118,13 +119,20 @@ export const addBet = functions.https.onRequest(async (req, res) => {
         return res.status(404).send("Match not found");
       }
 
+      console.log("Request body:", req.body);
+      console.log("User document data:", userDoc.data());
+      console.log("Match document data:", matchDoc.data());
+
       // 3. Create the bet
       const bet = {
         matchId,
         betAmount,
         betOption,
 	betOdds,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        away_college,
+        home_college,
+        sport,
+        // createdAt: admin.firestore.FieldValue.serverTimestamp(),
       };
 
       // 4. Update the user's bets
@@ -140,8 +148,8 @@ export const addBet = functions.https.onRequest(async (req, res) => {
   });
 });
 
-
 export const deleteBet = functions.https.onRequest(async (req, res) => {
+  // TODO: this shouldn't be async
   corsHandler(req, res, async () => {
     const { email, matchId } = req.body;
 
@@ -388,6 +396,7 @@ export const getMatches = functions.https.onRequest(async (req, res) => {
       const matches = snapshot.docs.map((doc) => {
         const data = doc.data();
         return {
+          matchId: doc.id,
           home_college: data.home_college,
           away_college: data.away_college,
           sport: data.sport,
