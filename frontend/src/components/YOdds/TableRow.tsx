@@ -86,7 +86,10 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick, availabl
     const betAmount = parseFloat(inputValue);
     console.log(`Available points: ${availablePoints}`);
 
-    if (betAmount < 1 || betAmount > Math.min(250, availablePoints)) {
+    if (availablePoints < 1) {
+      alert("You don't have enough Ycoins");
+      return;
+    } else if (betAmount < 1 || betAmount > Math.min(250, availablePoints)) {
       alert(`Value must be between 1 and ${Math.min(250, availablePoints)}.`);
       return;
     }
