@@ -8,7 +8,7 @@ import { MatchesTableProps, Match } from "@src/types/components";
 
 
 // Main MatchesTable Component
-const MatchesTable: React.FC<MatchesTableProps> = ({ filteredMatches, handleCollegeClick }) => {
+const MatchesTable: React.FC<MatchesTableProps> = ({ filteredMatches, handleCollegeClick, availablePoints }) => {
 
 const onShowParticipants = (match: Match) => {
     // This could trigger a modal, display a dropdown, or anything else
@@ -32,6 +32,7 @@ return (
                 key={index}
                 match={match}
                 handleCollegeClick = {handleCollegeClick}
+                availablePoints = {availablePoints}
             />
             ))}
         </div>

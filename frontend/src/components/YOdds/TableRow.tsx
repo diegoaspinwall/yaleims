@@ -10,7 +10,7 @@ import {TableRowProps, Match } from '@src/types/components';
 import { useUser } from '../../context/UserContext.jsx';
 
 //TableRow Component
-const TableRow: React.FC<TableRowProps> = ({ match }) => {
+const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick, availablePoints }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [selectedOption, setSelectedOption] = useState<string>('');
@@ -83,8 +83,15 @@ const TableRow: React.FC<TableRowProps> = ({ match }) => {
 
   // Function to handle submitting the input
   const handleSubmit = () => {
-    console.log(`Submitted ${selectedOption} with value: ${inputValue}`);
     const betAmount = parseFloat(inputValue);
+    console.log(`Available points: ${availablePoints}`);
+
+    if (betAmount < 1 || betAmount > Math.min(250, availablePoints)) {
+      alert(`Value must be between 1 and ${Math.min(250, availablePoints)}.`);
+      return;
+    }
+
+    console.log(`Submitted ${selectedOption} with value: ${inputValue}`);
 
     const timestamp = match.timestamp;
     const date = new Date(timestamp);

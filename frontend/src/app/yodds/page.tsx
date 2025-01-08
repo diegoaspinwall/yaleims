@@ -100,7 +100,8 @@ const ScoresPage: React.FC = () => {
     };
 
     fetchPendingBets();
-  }, [userEmail]);
+  }, [availablePoints]);
+  // }, [userEmail]);
 
   // Fetch scores only once
   useEffect(() => {
@@ -207,7 +208,7 @@ const ScoresPage: React.FC = () => {
           style={{ maxWidth: '250px', minWidth: '200px' }}
         >
           <p className="text-center">My YCoins:</p>
-          <p className="text-center text-3xl">{availablePoints !== null ? availablePoints : "...loading..."}</p>
+          <p className="text-center text-3xl">{availablePoints !== null ? availablePoints : "0"}</p>
         </div>
       </div>
 
@@ -269,6 +270,7 @@ const ScoresPage: React.FC = () => {
         <MatchesTableYO
           filteredMatches={filteredMatches}
           handleCollegeClick={handleCollegeClick}
+          availablePoints={availablePoints}
         />
       </div>
 
