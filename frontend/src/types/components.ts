@@ -15,6 +15,16 @@ export interface CollegeSummaryCardProps {
   isLoading: boolean;
 }
 
+export interface Bet {
+  away_college: string;
+  betAmount: number;
+  betOdds: number;
+  betOption: string;
+  home_college: string;
+  matchId: string;
+  sport: string;
+}
+
 export type Match = {
   id: string; // Unique identifier for the match
   home_college: string; // Abbreviation of the home college

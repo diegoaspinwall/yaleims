@@ -1,26 +1,17 @@
 import {
     groupByDate,
+    groupBetByDate,
   } from "@src/data/helpers";
 
 import TableRow from "./TableRowPending";
 
-import { MatchesTableProps, Match } from "@src/types/components";
+import { MatchesTableProps, Match, Bet } from "@src/types/components";
 
 
 // Main MatchesTable Component
-const MatchesTable: React.FC<MatchesTableProps> = ({ filteredMatches, handleCollegeClick }) => {
+const MatchesTable: React.FC<MatchesTableProps> = ({ pendingBets }) => {
 
-const onShowParticipants = (match: Match) => {
-    // This could trigger a modal, display a dropdown, or anything else
-    console.log("TODO");
-};
-const test = groupByDate(filteredMatches);
-
-
-
-
-
-
+const test = groupBetByDate(pendingBets);
 
 return (
     <>
@@ -32,11 +23,10 @@ return (
             </div>
         </div>
         <div>
-            {items.map((match, index) => (
+            {items.map((bet, index) => (
             <TableRow
                 key={index}
-                match={match}
-                handleCollegeClick = {handleCollegeClick}
+                bet={bet}
             />
             ))}
         </div>
@@ -45,8 +35,5 @@ return (
     </>
 );
 };
-
-
-
 
 export default MatchesTable;

@@ -14,6 +14,7 @@ const onShowParticipants = (match: Match) => {
     // This could trigger a modal, display a dropdown, or anything else
     console.log("TODO");
 };
+
 const test = groupByDate(filteredMatches);
 
 return (

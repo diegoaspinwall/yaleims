@@ -4,7 +4,7 @@ type CollegeMap = Record<string, string>; // Map of abbreviation to full name
 type SportMap = Record<string, number>;
 type EmojiMap = Record<string, string>;
 
-import { Match, Sport } from "@src/types/components";
+import { Match, Sport, Bet } from "@src/types/components";
 
 // List of sports with the proper type
 export const sports: Sport[] = [
@@ -165,6 +165,28 @@ export const groupByDate = (allMatches: Match[]) => {
   const groupedData: { [key: string]: Match[] } = {};
 
   allMatches.forEach((item) => {
+    const date: string = new Date(item.timestamp).toLocaleDateString(
+      "en-CA",
+      {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }
+    );
+    // console.log(date)
+    if (!groupedData[date]) {
+      groupedData[date] = [];
+    }
+    groupedData[date].push(item);
+  });
+
+  return groupedData;
+};
+
+export const groupBetByDate = (allBets: Bet[]) => {
+  const groupedData: { [key: string]: Bet[] } = {};
+
+  allBets.forEach((item) => {
     const date: string = new Date(item.timestamp).toLocaleDateString(
       "en-CA",
       {

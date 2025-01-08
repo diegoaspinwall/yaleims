@@ -13,12 +13,16 @@ import MatchesTableYO from "@src/components/YOdds/MatchTable";
 //YOdds table for pending bets import
 import MatchesTablePending from "@src/components/YOdds/MatchTablePending";
 
-import { Match, CollegeStats } from "@src/types/components";
+import { Match, CollegeStats, Bet } from "@src/types/components";
 
+import { useUser } from '../../context/UserContext.jsx';
 
 import "react-loading-skeleton/dist/skeleton.css";
 
+// const YoddsPage: React.FC = () => {
 const ScoresPage: React.FC = () => {
+  {/* This contains a lot of stuff that could be used for filters. The actual functionality for filters isn't implemented yet. */}
+
   const filtersContext = useContext(FiltersContext);
   const { filter, setFilter } = filtersContext;
   const router = useRouter();
@@ -27,17 +31,52 @@ const ScoresPage: React.FC = () => {
   const [filteredMatches, setFilteredMatches] = useState<Match[]>([]);
   const [originalData, setOriginalData] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [pendingBets, setPendingBets] = useState<Bet[]>([]);
 
   // State for college stats
   const [collegeStats, setCollegeStats] = useState<CollegeStats | null>(null);
   const [collegeIsLoading, setCollegeIsLoading] = useState(false);
+
+  const { user } = useUser(); // Now calling inside a component
+  const userEmail = user ? user.email : null;
+
+  // Fetch pending bets only once
+  useEffect(() => {
+    if (!userEmail) return;
+
+    const fetchPendingBets = async () => {
+      try {
+        const response = await fetch(
+          // `https://us-central1-yims-125a2.cloudfunctions.net/getPendingBets?email=${encodeURIComponent(userEmail)}`,
+          `https://us-central1-yims-125a2.cloudfunctions.net/getPendingBets?email=${userEmail}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error fetching pending bets: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setPendingBets(data);
+      } catch (error) {
+        console.error("Failed to fetch scores:", error);
+      }
+    };
+
+    fetchPendingBets();
+  }, [userEmail]);
 
   // Fetch scores only once
   useEffect(() => {
     const fetchScores = async () => {
       try {
         const response = await fetch(
-          "https://us-central1-yims-125a2.cloudfunctions.net/getMatches?type=future",
+          "https://us-central1-yims-125a2.cloudfunctions.net/getMatches?type=future&sortOrder=asc",
           {
             method: "GET",
             headers: {
@@ -130,11 +169,6 @@ const ScoresPage: React.FC = () => {
 
   return (
     <div className="min-h-screen p-8 flex-col items-center">
-{/*
-      <h1 className="md:text-4xl text-xl font-bold text-center mb-8 pt-8">
-        YOdds
-      </h1>
-*/}
 
       <div className="flex justify-center items-center mb-4 pt-10">
         <div
@@ -160,8 +194,9 @@ const ScoresPage: React.FC = () => {
         }
 
         <MatchesTablePending
-          filteredMatches={filteredMatches}
-          handleCollegeClick={handleCollegeClick}
+          // filteredMatches={filteredMatches}
+          // handleCollegeClick={handleCollegeClick}
+	  pendingBets={pendingBets}
         />
       </div>
 

@@ -10,7 +10,7 @@ import {TableRowProps, Match } from '@src/types/components';
 import { useUser } from '../../context/UserContext.jsx';
 
 //TableRow Component
-const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
+const TableRow: React.FC<TableRowProps> = ({ match }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [selectedOption, setSelectedOption] = useState<string>('');
@@ -20,6 +20,7 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
     betAmount: number;
     betOption: string;
     betOdds: string;
+    timestamp: string;
   } | null>(null);
   const [isBetAdded, setIsBetAdded] = useState(false);
 
@@ -32,7 +33,7 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
 
   const userEmail = getUserEmail();
 
-  const addBet = async (email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport) => {
+  const addBet = async (email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport, timestamp) => {
     try {
       const response = await fetch(
         "https://us-central1-yims-125a2.cloudfunctions.net/addBet",
@@ -50,6 +51,7 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
             away_college,
             home_college,
             sport,
+            timestamp,
           }),
         }
       );
@@ -83,6 +85,10 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
   const handleSubmit = () => {
     console.log(`Submitted ${selectedOption} with value: ${inputValue}`);
     const betAmount = parseFloat(inputValue);
+
+    const timestamp = match.timestamp;
+    const date = new Date(timestamp);
+
     const betData = {
       email: userEmail,
       matchId: match.matchId,
@@ -92,6 +98,7 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
       away_college: match.away_college,
       home_college: match.home_college,
       sport: match.sport,
+      timestamp: date.toISOString(),
     };
 
     console.log("Bet details to be submitted:", betData);
@@ -103,9 +110,9 @@ const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => {
 
   useEffect(() => {
     if (betDetails && !isBetAdded) {
-      const { email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport } = betDetails;
+      const { email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport, timestamp } = betDetails;
       if (email) {
-        addBet(email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport);
+        addBet(email, matchId, betAmount, betOption, betOdds, away_college, home_college, sport, timestamp);
       }
     }
   }, [betDetails, isBetAdded]); // Runs whenever betDetails changes

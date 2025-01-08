@@ -8,10 +8,10 @@ import {
 import {TableRowProps, Match } from '@src/types/components';
 
   //TableRow Component
-  const TableRow: React.FC<TableRowProps> = ({ match, handleCollegeClick }) => (
+  const TableRow: React.FC<TableRowProps> = ({ bet }) => (
     <div className="bg-white grid grid-cols-[auto_1fr_auto] items-center">
       <div className="md:px-6 pl-2 py-4 text-xs md:text-sm text-gray-500">
-        {new Date(match.timestamp).toLocaleString("en-US", {
+        {new Date(bet.timestamp).toLocaleString("en-US", {
           hour: "2-digit", // "04"
           minute: "2-digit", // "00"
           hour12: true, // "AM/PM"
@@ -24,8 +24,8 @@ import {TableRowProps, Match } from '@src/types/components';
         {/* In reality we will have an if statement to determine whether the bet is for a forfeit, team1win, team2win or draw based on the bet object
         but this will be implemented when we're ready to fully integrate. For now a placeholder to display what it WILL look like.*/}
         
-        {match.home_college == "GH" ? (
-          // EXAMPLE: home college wins
+        {bet.betOption == bet.home_college ? (
+          // EXAMPLE: home college bet
           <>
             <div className="items-start text-xs md:text-sm">
               <strong
@@ -34,20 +34,20 @@ import {TableRowProps, Match } from '@src/types/components';
               >
                 <Image
                   src={`/college_flags/${
-                    toCollegeName[match.home_college]
+                    toCollegeName[bet.home_college]
                   }.png`}
-                  alt={match.home_college}
+                  alt={bet.home_college}
                   width={20}
                   height={20}
                   className="mr-2 object-contain"
                   unoptimized
                 />
-                {toCollegeName[match.home_college]}
+                {toCollegeName[bet.home_college]}
               </strong>
             </div>
             <div 
               className={`${
-                match.away_college === "" ? "hidden" : "block"
+                bet.away_college === "" ? "hidden" : "block"
               } items-start text-xs md:text-sm`}
             >
               <strong
@@ -55,31 +55,31 @@ import {TableRowProps, Match } from '@src/types/components';
               >
                 <Image
                   src={`/college_flags/${
-                    toCollegeName[match.away_college]
+                    toCollegeName[bet.away_college]
                   }.png`}
-                  alt={match.away_college}
+                  alt={bet.away_college}
                   width={20}
                   height={20}
                   className="mr-2 object-contain"
                   unoptimized
                 />
                 
-                {toCollegeName[match.away_college]}
+                {toCollegeName[bet.away_college]}
               </strong>
             </div>
             
             <div className="text-left hidden md:block"            >
               <strong> 
-                100 coins wagered
+                {bet.betAmount} coins wagered
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                200 coins to win
+                {bet.betAmount * (1+bet.betOdds)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleCollegeClick(bet.away_college)} // Replace with your function
             style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
@@ -89,16 +89,16 @@ import {TableRowProps, Match } from '@src/types/components';
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                100 coins wagered
+                {bet.betAmount} coins wagered
               </strong>
             </div>
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                200 coins to win
+                {bet.betAmount * (1+bet.betOdds)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleCollegeClick(bet.away_college)} // Replace with your function
             style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
@@ -106,8 +106,8 @@ import {TableRowProps, Match } from '@src/types/components';
               </strong>
             </div>
           </>
-        ) : match.home_college == "BF" ? (
-          // EXAMPLE: away college wins
+        ) : bet.betOption == bet.away_college ? (
+          // EXAMPLE: away college bet
           <>
             <div className="items-start text-xs md:text-sm">
               <strong
@@ -115,20 +115,20 @@ import {TableRowProps, Match } from '@src/types/components';
               >
                 <Image
                   src={`/college_flags/${
-                    toCollegeName[match.home_college]
+                    toCollegeName[bet.home_college]
                   }.png`}
-                  alt={match.home_college}
+                  alt={bet.home_college}
                   width={20}
                   height={20}
                   className="mr-2 object-contain"
                   unoptimized
                 />
-                {toCollegeName[match.home_college]}
+                {toCollegeName[bet.home_college]}
               </strong>
             </div>
             <div 
               className={`${
-                match.away_college === "" ? "hidden" : "block"
+                bet.away_college === "" ? "hidden" : "block"
               } items-start text-xs md:text-sm`}
             >
               <strong
@@ -137,31 +137,31 @@ import {TableRowProps, Match } from '@src/types/components';
               >
                 <Image
                   src={`/college_flags/${
-                    toCollegeName[match.away_college]
+                    toCollegeName[bet.away_college]
                   }.png`}
-                  alt={match.away_college}
+                  alt={bet.away_college}
                   width={20}
                   height={20}
                   className="mr-2 object-contain"
                   unoptimized
                 />
                   
-                {toCollegeName[match.away_college]}
+                {toCollegeName[bet.away_college]}
               </strong>
             </div>
             
             <div className="text-left hidden md:block"            >
               <strong> 
-                50 coins wagered
+                {bet.betAmount} coins wagered
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                200 coins to win
+                {bet.betAmount * (1+bet.betOdds)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleCollegeClick(bet.away_college)} // Replace with your function
             style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
@@ -171,16 +171,16 @@ import {TableRowProps, Match } from '@src/types/components';
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                50 coins wagered
+                {bet.betAmount} coins wagered
               </strong>
             </div>
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                200 coins to win
+                {bet.betAmount * (1+bet.betOdds)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleCollegeClick(bet.away_college)} // Replace with your function
             style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
@@ -189,7 +189,7 @@ import {TableRowProps, Match } from '@src/types/components';
             </div>
           </>
 
-        ) : match.home_college == "JE" ? (
+        ) : bet.betOption == "Draw" ? (
           // EXAMPLE: draw
           <> 
             <div className="items-start text-xs md:text-sm">
@@ -199,20 +199,20 @@ import {TableRowProps, Match } from '@src/types/components';
               >
                 <Image
                   src={`/college_flags/${
-                    toCollegeName[match.home_college]
+                    toCollegeName[bet.home_college]
                   }.png`}
-                  alt={match.home_college}
+                  alt={bet.home_college}
                   width={20}
                   height={20}
                   className="mr-2 object-contain"
                   unoptimized
                 />
-                {toCollegeName[match.home_college]}
+                {toCollegeName[bet.home_college]}
               </strong>
             </div>
             <div 
               className={`${
-                match.away_college === "" ? "hidden" : "block"
+                bet.away_college === "" ? "hidden" : "block"
               } items-start text-xs md:text-sm`}
             >
               <strong
@@ -221,30 +221,30 @@ import {TableRowProps, Match } from '@src/types/components';
               >
                 <Image
                   src={`/college_flags/${
-                    toCollegeName[match.away_college]
+                    toCollegeName[bet.away_college]
                   }.png`}
-                  alt={match.away_college}
+                  alt={bet.away_college}
                   width={20}
                   height={20}
                   className="mr-2 object-contain"
                   unoptimized
                 />
                 
-                {toCollegeName[match.away_college]}
+                {toCollegeName[bet.away_college]}
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                100 coins wagered
+                {bet.betAmount} coins wagered
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                120 coins to win
+                {bet.betAmount * (1+bet.betOdds)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleCollegeClick(bet.away_college)} // Replace with your function
             style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
@@ -254,16 +254,16 @@ import {TableRowProps, Match } from '@src/types/components';
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                100 coins wagered
+                {bet.betAmount} coins wagered
               </strong>
             </div>
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                120 coins to win
+                {bet.betAmount * (1+bet.betOdds)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleCollegeClick(bet.away_college)} // Replace with your function
             style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
@@ -282,20 +282,20 @@ import {TableRowProps, Match } from '@src/types/components';
               >
                 <Image
                   src={`/college_flags/${
-                    toCollegeName[match.home_college]
+                    toCollegeName[bet.home_college]
                   }.png`}
-                  alt={match.home_college}
+                  alt={bet.home_college}
                   width={20}
                   height={20}
                   className="mr-2 object-contain"
                   unoptimized
                 />
-                {toCollegeName[match.home_college]}
+                {toCollegeName[bet.home_college]}
               </strong>
             </div>
             <div 
               className={`${
-                match.away_college === "" ? "hidden" : "block"
+                bet.away_college === "" ? "hidden" : "block"
               } items-start text-xs md:text-sm`}
             >
               <strong
@@ -304,31 +304,31 @@ import {TableRowProps, Match } from '@src/types/components';
               >
                 <Image
                   src={`/college_flags/${
-                    toCollegeName[match.away_college]
+                    toCollegeName[bet.away_college]
                   }.png`}
-                  alt={match.away_college}
+                  alt={bet.away_college}
                   width={20}
                   height={20}
                   className="mr-2 object-contain"
                   unoptimized
                 />
                 
-                {toCollegeName[match.away_college]}
+                {toCollegeName[bet.away_college]}
               </strong>
             </div>
               
             <div className="text-left hidden md:block"            >
               <strong> 
-                100 coins wagered
+                {bet.betAmount} coins wagered
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                300 coins to win
+                {bet.betAmount * (1+bet.betOdds)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleCollegeClick(bet.away_college)} // Replace with your function
             style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
@@ -338,16 +338,16 @@ import {TableRowProps, Match } from '@src/types/components';
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                100 coins wagered
+                {bet.betAmount} coins wagered
               </strong>
             </div>
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                300 coins to win
+                {bet.betAmount * (1+bet.betOdds)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
-            onClick={() => handleCollegeClick(match.away_college)} // Replace with your function
+            onClick={() => handleCollegeClick(bet.away_college)} // Replace with your function
             style={{background:'#FF3333', border:"6px solid #FF3333", borderRadius: '10px'}}
             >
               <strong>
@@ -355,12 +355,11 @@ import {TableRowProps, Match } from '@src/types/components';
               </strong>
             </div>
           </>
-        ) 
-      
+        )
       }
       </div>
 
-      <div className="text-center px-2 py-1">{emojiMap[match.sport]}</div>
+      <div className="text-center px-2 py-1">{emojiMap[bet.sport]}</div>
     </div>
   );
 
