@@ -151,12 +151,12 @@ const TableRow: React.FC<TableRowProps> = ({ bet }) => {
             
             <div className="text-left hidden md:block"            >
               <strong> 
-                {bet.betAmount} coins wagered
+                {(bet.betAmount).toFixed(2)} coins wagered
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                {bet.betAmount * (1+bet.betOdds)} coins to win
+                {(bet.betAmount * (bet.betOdds)).toFixed(2)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
@@ -171,12 +171,12 @@ const TableRow: React.FC<TableRowProps> = ({ bet }) => {
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                {bet.betAmount} coins wagered
+                {(bet.betAmount).toFixed(2)} coins wagered
               </strong>
             </div>
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                {bet.betAmount * (1+bet.betOdds)} coins to win
+                {(bet.betAmount * (bet.betOdds)).toFixed(2)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
@@ -235,12 +235,12 @@ const TableRow: React.FC<TableRowProps> = ({ bet }) => {
             
             <div className="text-left hidden md:block"            >
               <strong> 
-                {bet.betAmount} coins wagered
+                {(bet.betAmount).toFixed(2)} coins wagered
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                {bet.betAmount * (1+bet.betOdds)} coins to win
+                {(bet.betAmount * (bet.betOdds)).toFixed(2)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
@@ -255,12 +255,12 @@ const TableRow: React.FC<TableRowProps> = ({ bet }) => {
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                {bet.betAmount} coins wagered
+                {(bet.betAmount).toFixed(2)} coins wagered
               </strong>
             </div>
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                {bet.betAmount * (1+bet.betOdds)} coins to win
+                {(bet.betAmount * (bet.betOdds)).toFixed(2)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
@@ -320,12 +320,12 @@ const TableRow: React.FC<TableRowProps> = ({ bet }) => {
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                {bet.betAmount} coins wagered
+                {(bet.betAmount).toFixed(2)} coins wagered
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                {bet.betAmount * (1+bet.betOdds)} coins to win
+                {(bet.betAmount * (bet.betOdds)).toFixed(2)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
@@ -340,12 +340,12 @@ const TableRow: React.FC<TableRowProps> = ({ bet }) => {
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                {bet.betAmount} coins wagered
+                {(bet.betAmount).toFixed(2)} coins wagered
               </strong>
             </div>
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                {bet.betAmount * (1+bet.betOdds)} coins to win
+                {(bet.betAmount * (bet.betOdds)).toFixed(2)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
@@ -406,12 +406,12 @@ const TableRow: React.FC<TableRowProps> = ({ bet }) => {
               
             <div className="text-left hidden md:block"            >
               <strong> 
-                {bet.betAmount} coins wagered
+                {(bet.betAmount).toFixed(2)} coins wagered
               </strong>
             </div>
             <div className="text-left hidden md:block"            >
               <strong> 
-                {bet.betAmount * (1+bet.betOdds)} coins to win
+                {(bet.betAmount * (bet.betOdds)).toFixed(2)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center hidden md:block" 
@@ -426,12 +426,12 @@ const TableRow: React.FC<TableRowProps> = ({ bet }) => {
 
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                {bet.betAmount} coins wagered
+                {(bet.betAmount).toFixed(2)} coins wagered
               </strong>
             </div>
             <div className="text-right md:hidden text-xs"            >
               <strong>
-                {bet.betAmount * (1+bet.betOdds)} coins to win
+                {(bet.betAmount * (bet.betOdds)).toFixed(2)} coins to win
               </strong>
             </div>
             <div className="cursor-pointer text-center md:hidden text-xs"
