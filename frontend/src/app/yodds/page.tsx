@@ -32,6 +32,7 @@ const ScoresPage: React.FC = () => {
   const [originalData, setOriginalData] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [pendingBets, setPendingBets] = useState<Bet[]>([]);
+  const [availablePoints, setAvailablePoints] = useState<number | null>(null);
 
   // State for college stats
   const [collegeStats, setCollegeStats] = useState<CollegeStats | null>(null);
@@ -39,6 +40,36 @@ const ScoresPage: React.FC = () => {
 
   const { user } = useUser(); // Now calling inside a component
   const userEmail = user ? user.email : null;
+
+  useEffect(() => {
+    if (!userEmail) return;
+
+    const fetchMyPoints = async () => {
+      try {
+        const response = await fetch(
+          // `https://us-central1-yims-125a2.cloudfunctions.net/getPendingBets?email=${encodeURIComponent(userEmail)}`,
+          `https://us-central1-yims-125a2.cloudfunctions.net/getMyAvailablePoints?email=${userEmail}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error fetching my points: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setAvailablePoints(data.points);
+      } catch (error) {
+        console.error("Failed to fetch scores:", error);
+      }
+    };
+
+    fetchMyPoints();
+  }, [userEmail]);
 
   // Fetch pending bets only once
   useEffect(() => {
@@ -176,7 +207,7 @@ const ScoresPage: React.FC = () => {
           style={{ maxWidth: '250px', minWidth: '200px' }}
         >
           <p className="text-center">My YCoins:</p>
-          <p className="text-center text-3xl">1000</p>
+          <p className="text-center text-3xl">{availablePoints !== null ? availablePoints : "...loading..."}</p>
         </div>
       </div>
 

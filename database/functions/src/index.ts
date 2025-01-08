@@ -51,7 +51,11 @@ const INITIALBALANCE = 500; // Initial balance for the user
 
 export const getMyAvailablePoints = functions.https.onRequest(async (req, res) => {
   corsHandler(req, res, async () => {
-    const { email } = req.body; // Expect email to be passed in query body
+    const { email } = req.query;
+
+    if (typeof email !== 'string') {
+      return res.status(400).send('Email must be a valid string');
+    }
 
     if (!email) {
       return res.status(400).send("Email query parameter is required");
@@ -85,7 +89,7 @@ export const getMyAvailablePoints = functions.https.onRequest(async (req, res) =
           const matchDoc = await matchRef.get();
           const matchData = matchDoc.data();
 
-          if (matchData?.winner) { // the game has been played if there is a winner
+          if (matchData?.winner || matchData?.forfeit) { // the game has been played if there is a winner or forfeit is true
             // Check if the betOption matches the winner
             if (betOption === matchData.winner || (matchData.forfeit == true && "Forfeit" == betOption)) {
               // If the user won the bet, add the bet amount * (betOdds+1) to their total
@@ -156,7 +160,7 @@ export const getPendingBets = functions.https.onRequest(async (req, res) => {
         const matchData = matchDoc.data();
 
         // If the match does not have a winner attribute, add this bet to the result list
-        if (!matchData || matchData.winner === undefined || matchData.winner === null || matchData.winner === "") {
+        if (!matchData || ((matchData.winner === undefined || matchData.winner === null || matchData.winner === "") && matchData.forfeit === false)) {
           betsWithoutWinner.push(bet);
         }
       }
