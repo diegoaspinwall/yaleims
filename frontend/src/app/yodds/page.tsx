@@ -19,8 +19,7 @@ import { useUser } from '../../context/UserContext.jsx';
 
 import "react-loading-skeleton/dist/skeleton.css";
 
-// const YoddsPage: React.FC = () => {
-const ScoresPage: React.FC = () => {
+const YoddsPage: React.FC = () => {
   {/* This contains a lot of stuff that could be used for filters. The actual functionality for filters isn't implemented yet. */}
 
   const filtersContext = useContext(FiltersContext);
@@ -279,4 +278,4 @@ const ScoresPage: React.FC = () => {
   );
 };
 
-export default ScoresPage;
+export default YoddsPage;
