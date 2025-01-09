@@ -52,6 +52,10 @@ const processMatches = async (matches) => {
       location: match.location,
       home_college_participants: [],
       away_college_participants: [],
+      home_college_volume: match.home_college_volume || 0,
+      away_college_volume: match.away_college_volume || 0,
+      draw_volume: match.draw_volume || 0,
+      forfeit_volume: match.forfeit_volume || 0,
     });
 
     if (match.winner == "Draw") {
@@ -117,6 +121,10 @@ fs.createReadStream(FILE_NAME)
       date: row.Date,
       time: row.Time,
       location: row.Location,
+      home_college_volume: 0,
+      away_college_volume: 0,
+      draw_volume: 0,
+      forfeit_volume: 0,
     };
     matches.push(match);
   })

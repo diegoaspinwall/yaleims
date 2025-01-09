@@ -57,6 +57,8 @@ export const UserProvider = ({ children }) => {
         college: data.user.college,
         points: data.user.points,
         role: data.user.role,
+        // Q: should we add the user's bets to this?
+        // bets: data.user.bets,
       };
 
       setUser(userData); // Update user state

@@ -70,6 +70,7 @@ export const fetchOrAddUser = functions.https.onRequest((req, res) => {
         points: 0,
         college: college || null,
         role: "user", // default role; otherwise "admin" can be set in firestore
+        bets: [], // added by diego for YOdds
       };
 
       await userRef.set(newUser);
